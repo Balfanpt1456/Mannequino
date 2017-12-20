@@ -1,0 +1,176 @@
+fileFormatVersion: 2
+guid: 8fd9be5b3edc30544b495d357d0b7706
+timeCreated: 1512540953
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Bone
+    100004: Bone_001
+    100006: Bone_002
+    100008: Bone_003
+    100010: Bone_004
+    100012: Bone_005
+    100014: Bone_006
+    100016: Bone_007
+    100018: Bone_008
+    100020: Bone_009
+    100022: Bone_010
+    100024: Bone_011
+    100026: Bone_012
+    100028: Bone_013
+    100030: Bone_014
+    100032: Bone_015
+    100034: Bone_016
+    100036: Bone_017
+    100038: Bone_020
+    100040: Bone_023
+    100042: Cube
+    100044: //RootNode
+    100046: Head
+    100048: Head_Spine
+    100050: L_Arm_Spine
+    100052: L_Foot
+    100054: L_Hand
+    100056: L_Hip_Spine
+    100058: L_Lower_Arm
+    100060: L_Lower_Leg
+    100062: L_Upper_Arm
+    100064: L_Upper_Leg
+    100066: R_Arm_Spine
+    100068: R_Foot
+    100070: R_Hand
+    100072: R_Hip_Spine
+    100074: R_Lower_Arm
+    100076: R_Lower_Leg
+    100078: R_Upper_Arm
+    100080: R_Upper_Leg
+    100082: Spine
+    100084: Spine_Lower
+    100086: Person
+    400000: Armature
+    400002: Bone
+    400004: Bone_001
+    400006: Bone_002
+    400008: Bone_003
+    400010: Bone_004
+    400012: Bone_005
+    400014: Bone_006
+    400016: Bone_007
+    400018: Bone_008
+    400020: Bone_009
+    400022: Bone_010
+    400024: Bone_011
+    400026: Bone_012
+    400028: Bone_013
+    400030: Bone_014
+    400032: Bone_015
+    400034: Bone_016
+    400036: Bone_017
+    400038: Bone_020
+    400040: Bone_023
+    400042: Cube
+    400044: //RootNode
+    400046: Head
+    400048: Head_Spine
+    400050: L_Arm_Spine
+    400052: L_Foot
+    400054: L_Hand
+    400056: L_Hip_Spine
+    400058: L_Lower_Arm
+    400060: L_Lower_Leg
+    400062: L_Upper_Arm
+    400064: L_Upper_Leg
+    400066: R_Arm_Spine
+    400068: R_Foot
+    400070: R_Hand
+    400072: R_Hip_Spine
+    400074: R_Lower_Arm
+    400076: R_Lower_Leg
+    400078: R_Upper_Arm
+    400080: R_Upper_Leg
+    400082: Spine
+    400084: Spine_Lower
+    400086: Person
+    4300000: Cube
+    4300002: Person
+    7400000: Default Take
+    9500000: //RootNode
+    13700000: Cube
+    13700002: Person
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
