@@ -38,7 +38,7 @@ public class MannequinController : MonoBehaviour {
 
         go = false;
         // mv = Quaternion.Euler(new Vector3(0, 0, 0));
-       mv =  new Quaternion(0, 0, 0, 0);
+        mv =  new Quaternion(0, 0, 0, 0);
         // cube.transform();
     }
 

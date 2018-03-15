@@ -5,8 +5,8 @@
 
 // CONSTANTS ------------------------------------------------------------------
 
-#define MPU_COUNT 6
-const int ADO_PINS[MPU_COUNT] = {8, 9, 10,11,12,13};
+#define MPU_COUNT 5
+const int ADO_PINS[MPU_COUNT] = {8, 9, 10,11,12};
 
 #define READ_ADDRESS 0x68 // could have been 0x69
 #define MILLIS_TILL_RESET 1000
@@ -76,7 +76,7 @@ class Accelerometer : public MPU6050 {
       fifo_size = getFIFOCount();
       if (fifo_size == 1024) {
         resetFIFO();
-        Serial.println(F("FIFO overflow!"));
+        //Serial.println(F("FIFO overflow!"));
       } else {
         bool is_reset = false;
         unsigned long polling_started_at = millis();
@@ -142,8 +142,7 @@ Accelerometer mpus[] = {
   Accelerometer(1),
   Accelerometer(2),
   Accelerometer(3),
-  Accelerometer(4),
-  Accelerometer(5)
+  Accelerometer(4)
 };
 
 // ----------------------------------------------------------------------------

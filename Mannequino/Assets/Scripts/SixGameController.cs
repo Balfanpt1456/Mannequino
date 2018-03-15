@@ -13,12 +13,23 @@ public class SixGameController : MonoBehaviour
     private SerialPort serial;
     private bool isReading;
 
+
+    public Quaternion[] mv;
+    public Quaternion a = new Quaternion(0, 0, 0, 0);
+
+
+
     void Start()
     {
         serial = new SerialPort("COM9", 115200);
         serial.ReadTimeout = 100;
         serial.Open();
         isReading = false;
+        mv = new Quaternion[5];
+        for(int i = 0; i < mv.Length; i++)
+        {
+            mv[i] = new Quaternion(0, 0, 0, 0);
+        }
     }
 
     void Update()
@@ -28,6 +39,7 @@ public class SixGameController : MonoBehaviour
             serial.WriteLine("y");
             Debug.Log("start 'em");
             isReading = true;
+
         }
 
         if (isReading)
@@ -50,8 +62,18 @@ public class SixGameController : MonoBehaviour
                         q.x *= -1;
                         q.y *= -1;
 
-                        cubes[i].localRotation = q;
-                        
+                        cubes[i].localRotation = q * mv[i];
+
+                        if (Input.GetKeyDown(KeyCode.C))
+                        {
+                            Debug.Log("Calibrating");
+
+                            //Quaternion s = Quaternion.Inverse(q);
+                            mv[i] = Quaternion.Inverse(q);
+                            //a = a * s;
+                            //RotateSelected2(a, cube);
+                        }
+
                     }
                 }
                 else
