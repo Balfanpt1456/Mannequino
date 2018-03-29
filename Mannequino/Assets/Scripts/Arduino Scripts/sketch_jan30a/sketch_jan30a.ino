@@ -108,7 +108,9 @@ class Accelerometer : public MPU6050 {
       unsigned long elapsedTime = presentTime - last_serial_at;
       if (elapsedTime > MILLIS_TILL_SHIP) {
         dmpGetQuaternion(&q, fifo_buffer);
-        Serial.print("[");
+
+        //if(id == 4){
+          Serial.print("[");
         Serial.print(id);
         Serial.print("\t");
         Serial.print(q.w, 5);
@@ -119,6 +121,8 @@ class Accelerometer : public MPU6050 {
         Serial.print("\t");
         Serial.print(q.z, 5);
         Serial.println("]");
+        //}
+
         last_serial_at = presentTime;
       }
     }
