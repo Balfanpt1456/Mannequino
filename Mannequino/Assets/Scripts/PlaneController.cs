@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO.Ports;
 using System;
-
-
+using Microsoft.Win32;
 
 public class PlaneController : MonoBehaviour
 {
@@ -27,15 +26,14 @@ public class PlaneController : MonoBehaviour
 
     public Quaternion q;
     public Quaternion mv;
-    public Quaternion a = new Quaternion(0, 0, 0, 0);
 
     public bool go;
 
 
 
-    public float movementSpeed =50;
+    public float movementSpeed = 50;
 
-    SerialPort sp = new SerialPort("COM8", 115200);
+    SerialPort sp = new SerialPort(AutodetectArduinoPort(), 115200);
 
     void Start()
     {
@@ -44,7 +42,7 @@ public class PlaneController : MonoBehaviour
 
         go = false;
         // mv = Quaternion.Euler(new Vector3(0, 0, 0));
-         mv = cube.transform.localRotation;
+        mv = Quaternion.identity;
         // cube.transform();
     }
 
@@ -84,24 +82,7 @@ public class PlaneController : MonoBehaviour
             Calibrate(q);
         }
 
-
-        if (Input.GetKey(KeyCode.W))
-        {
-
-
-            //Vector3 movement = cube.transform.rotation * Vector3.forward;
-            // cube2.velocity = movement * movementSpeed;
-
-
-            //cube.transform.TransformDirection(Vector3.forward);
-            //cube.transform.position += transform.TransformDirection(Vector3.right) * movementSpeed;
-            //cube.transform.position += Vector3.forward * Time.deltaTime * movementSpeed;
-            //cube.transform.position += transform.forward * Time.deltaTime * movementSpeed;
-            //cube2.velocity = transform.forward * movementSpeed;
-
-        }
-
-    
+            
 
 
     }
@@ -113,15 +94,11 @@ public class PlaneController : MonoBehaviour
 
 
 
-    void RotateSelected(Vector3 rotationInput, GameObject selectedObject)
-    {
-        selectedObject.transform.localRotation = Quaternion.Euler(rotationInput);
-    }
-
 
     void RotateSelected2(Quaternion rotationInput, GameObject selectedObject)
     {
         selectedObject.transform.rotation = rotationInput;
+        //selectedObject.transform.localEulerAngles = new Vector3(selectedObject.transform.localEulerAngles.x, selectedObject.transform.localEulerAngles.y,-selectedObject.transform.localEulerAngles.z);
     }
 
 
@@ -142,14 +119,13 @@ public class PlaneController : MonoBehaviour
                     q = ReadFrame(thingys);
 
                     Debug.Log(q);
-                    //q = Quaternion.Lerp(q, q, .35f);
                    
-
-
                     Debug.Log(q + "" + mv);
 
-                    RotateSelected2(q * mv, cube); 
-                 
+                    RotateSelected2(mv * q, cube);
+
+
+                   // transform.localRotation = Quaternion.Slerp(transform.localRotation, resting * q, .7f);
 
                     
 
@@ -200,8 +176,52 @@ public class PlaneController : MonoBehaviour
         float.TryParse(thingys[4], out q.x);
         q.x *= -1;
         q.y *= -1;
+        //q.z *= -1;
         return q;
     }
+
+    public static string AutodetectArduinoPort()
+    {
+        List<string> comports = new List<string>();
+        RegistryKey rk1 = Registry.LocalMachine;
+        RegistryKey rk2 = rk1.OpenSubKey("SYSTEM\\CurrentControlSet\\Enum");
+        string temp;
+        foreach (string s3 in rk2.GetSubKeyNames())
+        {
+            RegistryKey rk3 = rk2.OpenSubKey(s3);
+            foreach (string s in rk3.GetSubKeyNames())
+            {
+                if (s.Contains("VID") && s.Contains("PID"))
+                {
+                    RegistryKey rk4 = rk3.OpenSubKey(s);
+                    foreach (string s2 in rk4.GetSubKeyNames())
+                    {
+                        RegistryKey rk5 = rk4.OpenSubKey(s2);
+                        if ((temp = (string)rk5.GetValue("FriendlyName")) != null && temp.Contains("Arduino"))
+                        {
+                            RegistryKey rk6 = rk5.OpenSubKey("Device Parameters");
+                            if (rk6 != null && (temp = (string)rk6.GetValue("PortName")) != null)
+                            {
+                                comports.Add(temp);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (comports.Count > 0)
+        {
+            foreach (string s in SerialPort.GetPortNames())
+            {
+                if (comports.Contains(s))
+                    return s;
+            }
+        }
+
+        return "COM9";
+    }
+
 
 
 }
