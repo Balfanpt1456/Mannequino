@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/MannequinTest.unity
+- path: Assets/Scenes/FlyTest.unity
   isLoaded: 1
   isActive: 1

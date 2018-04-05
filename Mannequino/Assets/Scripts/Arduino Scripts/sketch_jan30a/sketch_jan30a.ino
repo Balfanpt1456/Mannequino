@@ -5,8 +5,8 @@
 
 // CONSTANTS ------------------------------------------------------------------
 
-#define MPU_COUNT 5
-const int ADO_PINS[MPU_COUNT] = {8, 9, 10,11,12};
+#define MPU_COUNT 1
+const int ADO_PINS[MPU_COUNT] = {8};
 
 #define READ_ADDRESS 0x68 // could have been 0x69
 #define MILLIS_TILL_RESET 1000
@@ -142,11 +142,7 @@ class Accelerometer : public MPU6050 {
 bool is_dmp_ready = false; 
 
 Accelerometer mpus[] = {
-  Accelerometer(0),
-  Accelerometer(1),
-  Accelerometer(2),
-  Accelerometer(3),
-  Accelerometer(4)
+  Accelerometer(0)
 };
 
 // ----------------------------------------------------------------------------

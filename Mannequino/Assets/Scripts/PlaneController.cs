@@ -6,7 +6,8 @@ using System;
 
 
 
-public class ArduinoController: MonoBehaviour {
+public class PlaneController : MonoBehaviour
+{
     private float amount;
     private float var1;
     private float var2;
@@ -14,7 +15,11 @@ public class ArduinoController: MonoBehaviour {
     private float var4;
 
     [SerializeField]
+    private Transform parent;
+
+    [SerializeField]
     private GameObject cube;
+
 
     [SerializeField]
     private Rigidbody cube2;
@@ -28,7 +33,7 @@ public class ArduinoController: MonoBehaviour {
 
 
 
-    public float movementSpeed = 0.02f;
+    public float movementSpeed =50;
 
     SerialPort sp = new SerialPort("COM8", 115200);
 
@@ -39,13 +44,22 @@ public class ArduinoController: MonoBehaviour {
 
         go = false;
         // mv = Quaternion.Euler(new Vector3(0, 0, 0));
-       mv =  new Quaternion(0, 0, 0, 0);
+         mv = cube.transform.localRotation;
         // cube.transform();
     }
 
     void Update()
     {
-        if (sp.IsOpen)  
+
+        //parent.position = cube.transform.position;
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            sp.WriteLine("y");
+            Debug.Log("start 'em");
+
+        }
+
+        if (sp.IsOpen)
         {
             try
             {
@@ -58,31 +72,22 @@ public class ArduinoController: MonoBehaviour {
         }
 
 
+
         if (go)
         {
-            Vector3 movement = cube.transform.rotation * Vector3.forward;
+            Vector3 movement = cube.transform.localRotation * Vector3.forward;
             cube2.velocity = movement * movementSpeed;
         }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            Calibrate(q);
+        }
+
 
         if (Input.GetKey(KeyCode.W))
         {
 
-
-            //Vector3 movement = cube.transform.rotation * Vector3.forward;
-           // cube2.velocity = movement * movementSpeed;
-
-
-            //cube.transform.TransformDirection(Vector3.forward);
-            //cube.transform.position += transform.TransformDirection(Vector3.right) * movementSpeed;
-            //cube.transform.position += Vector3.forward * Time.deltaTime * movementSpeed;
-            //cube.transform.position += transform.forward * Time.deltaTime * movementSpeed;
-            //cube2.velocity = transform.forward * movementSpeed;
-
-        }
-
-        if (Input.GetKey(KeyCode.C))
-        {
-            Calibrate();
 
             //Vector3 movement = cube.transform.rotation * Vector3.forward;
             // cube2.velocity = movement * movementSpeed;
@@ -96,20 +101,21 @@ public class ArduinoController: MonoBehaviour {
 
         }
 
+    
 
 
     }
 
-     void FixedUpdate()
+    void FixedUpdate()
     {
-       
+
     }
 
 
 
     void RotateSelected(Vector3 rotationInput, GameObject selectedObject)
     {
-        selectedObject.transform.rotation = Quaternion.Euler(rotationInput);
+        selectedObject.transform.localRotation = Quaternion.Euler(rotationInput);
     }
 
 
@@ -124,59 +130,58 @@ public class ArduinoController: MonoBehaviour {
     {
         try
         {
-            string str = sp.ReadLine();
+            string str = sp.ReadLine().TrimEnd();
             if (str != null)
             {
-                str = str.Trim();
-                string[] inputs = str.Substring(1, str.Length - 2).Split('\t');
-
-                if (inputs.Length == 5)
+          
+                string[] thingys = str.Substring(1, str.Length - 2).Split('\t');
+                if (thingys.Length == 5)
                 {
-                    var1 = float.Parse(inputs[1]);
-                    var2 = float.Parse(inputs[2]);
-                    var3 = float.Parse(inputs[3]);
-                    var4 = float.Parse(inputs[4]);
-                    // Debug.Log(var1 + "!!! " + var2);
+                    int i;
+                    int.TryParse(thingys[0], out i);
+                    q = ReadFrame(thingys);
+
+                    Debug.Log(q);
+                    //q = Quaternion.Lerp(q, q, .35f);
+                   
+
+
+                    Debug.Log(q + "" + mv);
+
+                    RotateSelected2(q * mv, cube); 
+                 
+
+                    
+
                 }
-
-                //q = new Quaternion(var1,var2, var3, var4);
-
-                q = new Quaternion( var1, var2, var4, var3);
-
-                if (Input.GetKeyDown(KeyCode.C))
-                {
-                    Debug.Log("Calibrating");
-
-                    //Quaternion s = Quaternion.Inverse(q);
-                    mv = Quaternion.Inverse(q);
-                    //a = a * s;
-                    //RotateSelected2(a, cube);
-                }
-                //Quaternion.Inverse(q);
-
-               // Vector3 v = new Vector3(var1, var2, var3);
-                RotateSelected2(q * mv, cube);
-                
 
             }
 
             //Debug.Log("Read " + str);
-          
+
         }
         catch (TimeoutException e)
         {
-            
+
         }
     }
 
 
+    public void Calibrate(Quaternion sel)
+    {
+        mv = Quaternion.Inverse(sel);
+        Debug.Log("Calibrating " + mv);
+    }
+
     public void Calibrate()
     {
-        Debug.Log("Calibrating");
         mv = Quaternion.Inverse(q);
+        Debug.Log("Calibrating " + mv);
     }
-  public void Go()
+
+    public void Go()
     {
+        Debug.Log("Go");
         go = true;
     }
 
@@ -185,4 +190,18 @@ public class ArduinoController: MonoBehaviour {
         Debug.Log("Start");
         sp.WriteLine("A");
     }
+
+    Quaternion ReadFrame(String[] thingys)
+    {
+        Quaternion q = new Quaternion();
+        float.TryParse(thingys[1], out q.w);
+        float.TryParse(thingys[2], out q.y);
+        float.TryParse(thingys[3], out q.z);
+        float.TryParse(thingys[4], out q.x);
+        q.x *= -1;
+        q.y *= -1;
+        return q;
+    }
+
+
 }
