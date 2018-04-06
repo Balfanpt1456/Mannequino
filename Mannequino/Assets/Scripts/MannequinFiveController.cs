@@ -13,7 +13,7 @@ public class MannequinFiveController : MonoBehaviour
     private SerialPort serial;
     private bool isReading;
 
-
+    public Quaternion q;
     public Quaternion[] mv;
     public Quaternion a = new Quaternion(0, 0, 0, 0);
 
@@ -61,11 +61,15 @@ public class MannequinFiveController : MonoBehaviour
                     {
                         int i;
                         int.TryParse(thingys[0], out i);
-                        Quaternion q = ReadFrame(thingys);
 
 
-                        q = Quaternion.Lerp(q, q, .35f);
-                        cubes[i].localRotation = q * mv[i];
+                        q = ReadFrame(thingys);
+                        
+
+                        //q = Quaternion.Lerp(q, q, .35f);
+                        cubes[i].localRotation = mv[i] * q;
+
+                       
 
                         if (Input.GetKeyDown(KeyCode.C))
                         {

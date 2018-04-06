@@ -7,18 +7,9 @@ using Microsoft.Win32;
 
 public class PlaneController : MonoBehaviour
 {
-    private float amount;
-    private float var1;
-    private float var2;
-    private float var3;
-    private float var4;
-
-    [SerializeField]
-    private Transform parent;
 
     [SerializeField]
     private GameObject cube;
-
 
     [SerializeField]
     private Rigidbody cube2;
@@ -28,10 +19,8 @@ public class PlaneController : MonoBehaviour
     public Quaternion mv;
 
     public bool go;
-
-
-
-    public float movementSpeed = 50;
+    
+    public float movementSpeed = 20;
 
     SerialPort sp = new SerialPort(AutodetectArduinoPort(), 115200);
 
@@ -41,9 +30,8 @@ public class PlaneController : MonoBehaviour
         sp.ReadTimeout = 1;
 
         go = false;
-        // mv = Quaternion.Euler(new Vector3(0, 0, 0));
         mv = Quaternion.identity;
-        // cube.transform();
+       
     }
 
     void Update()
@@ -69,7 +57,10 @@ public class PlaneController : MonoBehaviour
             }
         }
 
-
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Go();
+        }
 
         if (go)
         {
@@ -81,34 +72,14 @@ public class PlaneController : MonoBehaviour
         {
             Calibrate(q);
         }
-
-            
-
-
     }
-
-    void FixedUpdate()
-    {
-
-    }
-
-
-
-
-    void RotateSelected2(Quaternion rotationInput, GameObject selectedObject)
-    {
-        selectedObject.transform.rotation = rotationInput;
-        //selectedObject.transform.localEulerAngles = new Vector3(selectedObject.transform.localEulerAngles.x, selectedObject.transform.localEulerAngles.y,-selectedObject.transform.localEulerAngles.z);
-    }
-
-
 
     void serialEvent()
     {
         try
         {
             string str = sp.ReadLine().TrimEnd();
-            if (str != null)
+            if (str != null && str.StartsWith("["))
             {
           
                 string[] thingys = str.Substring(1, str.Length - 2).Split('\t');
@@ -116,25 +87,16 @@ public class PlaneController : MonoBehaviour
                 {
                     int i;
                     int.TryParse(thingys[0], out i);
+                    Quaternion qb = q;
                     q = ReadFrame(thingys);
 
-                    Debug.Log(q);
+                    cube.transform.localRotation = mv * q;
                    
-                    Debug.Log(q + "" + mv);
-
-                    RotateSelected2(mv * q, cube);
-
-
-                   // transform.localRotation = Quaternion.Slerp(transform.localRotation, resting * q, .7f);
-
-                    
-
                 }
 
             }
 
-            //Debug.Log("Read " + str);
-
+        
         }
         catch (TimeoutException e)
         {
@@ -176,7 +138,6 @@ public class PlaneController : MonoBehaviour
         float.TryParse(thingys[4], out q.x);
         q.x *= -1;
         q.y *= -1;
-        //q.z *= -1;
         return q;
     }
 

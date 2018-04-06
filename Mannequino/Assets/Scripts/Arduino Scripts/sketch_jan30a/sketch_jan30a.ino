@@ -29,12 +29,12 @@ class Accelerometer : public MPU6050 {
 
       if (dev_status == 0) {
         Serial.println(F("Enabling DMP..."));
-        setXAccelOffset(-1093);
-        setYAccelOffset(1662);
-        setZAccelOffset(1526);
-        setXGyroOffset(37);
-        setYGyroOffset(-40);
-        setZGyroOffset(57);
+       // setXAccelOffset(-1259);
+        //setYAccelOffset(425);
+        //setZAccelOffset(2557);
+        setXGyroOffset(-29);
+        setYGyroOffset(14);
+        setZGyroOffset(46);
         setDMPEnabled(true);
         packet_size = dmpGetFIFOPacketSize();
       } else {
