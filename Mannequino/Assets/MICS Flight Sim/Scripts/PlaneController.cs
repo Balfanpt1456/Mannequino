@@ -31,18 +31,14 @@ public class PlaneController : MonoBehaviour
 
         go = false;
         mv = Quaternion.identity;
-       
     }
 
     void Update()
     {
-
-        //parent.position = cube.transform.position;
         if (Input.GetKeyDown(KeyCode.I))
         {
             sp.WriteLine("y");
             Debug.Log("start 'em");
-
         }
 
         if (sp.IsOpen)
@@ -91,12 +87,8 @@ public class PlaneController : MonoBehaviour
                     q = ReadFrame(thingys);
 
                     cube.transform.localRotation = mv * q;
-                   
                 }
-
             }
-
-        
         }
         catch (TimeoutException e)
         {
