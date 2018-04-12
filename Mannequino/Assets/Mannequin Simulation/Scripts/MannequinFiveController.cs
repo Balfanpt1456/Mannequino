@@ -3,36 +3,34 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System;
 using UnityEngine;
+using Microsoft.Win32;
 
 public class MannequinFiveController : MonoBehaviour
 {
-    public Transform left;
-    public Transform right;
 
-    public Transform[] cubes;
+    public Transform[] limbs;
     private SerialPort serial;
     private bool isReading;
 
     public Quaternion q;
     public Quaternion[] mv;
-    public Quaternion a = new Quaternion(0, 0, 0, 0);
 
     public bool[] isCalibrated;
 
     void Start()
     {
-        serial = new SerialPort("COM9", 115200);
+        serial = new SerialPort(AutodetectArduinoPort(), 115200);
         serial.ReadTimeout = 100;
         serial.Open();
         isReading = false;
-        mv = new Quaternion[5];
+        mv = new Quaternion[limbs.Length];
         for (int i = 0; i < mv.Length; i++)
         {
             //mv[i] = new Quaternion(0, 0, 0, 0);
-            mv[i] = cubes[i].localRotation;
+            mv[i] = limbs[i].localRotation;
         }
 
-        isCalibrated = new bool[5];
+        isCalibrated = new bool[limbs.Length];
         for (int i = 0; i < isCalibrated.Length; i++)
         {
             isCalibrated[i] = false;
@@ -48,6 +46,15 @@ public class MannequinFiveController : MonoBehaviour
             isReading = true;
 
         }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            
+            Debug.Log("Calibrate");
+            Calibrate();
+
+        }
+
 
         if (isReading)
         {
@@ -67,7 +74,7 @@ public class MannequinFiveController : MonoBehaviour
                         
 
                         //q = Quaternion.Lerp(q, q, .35f);
-                        cubes[i].localRotation = mv[i] * q;
+                        limbs[i].localRotation = mv[i] * q;
 
                        
 
@@ -136,6 +143,52 @@ public class MannequinFiveController : MonoBehaviour
         q.y *= -1;
         return q;
     }
+
+
+    public static string AutodetectArduinoPort()
+    {
+        List<string> comports = new List<string>();
+        RegistryKey rk1 = Registry.LocalMachine;
+        RegistryKey rk2 = rk1.OpenSubKey("SYSTEM\\CurrentControlSet\\Enum");
+        string temp;
+        foreach (string s3 in rk2.GetSubKeyNames())
+        {
+            RegistryKey rk3 = rk2.OpenSubKey(s3);
+            foreach (string s in rk3.GetSubKeyNames())
+            {
+                if (s.Contains("VID") && s.Contains("PID"))
+                {
+                    RegistryKey rk4 = rk3.OpenSubKey(s);
+                    foreach (string s2 in rk4.GetSubKeyNames())
+                    {
+                        RegistryKey rk5 = rk4.OpenSubKey(s2);
+                        if ((temp = (string)rk5.GetValue("FriendlyName")) != null && temp.Contains("Arduino"))
+                        {
+                            RegistryKey rk6 = rk5.OpenSubKey("Device Parameters");
+                            if (rk6 != null && (temp = (string)rk6.GetValue("PortName")) != null)
+                            {
+                                comports.Add(temp);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (comports.Count > 0)
+        {
+            foreach (string s in SerialPort.GetPortNames())
+            {
+                if (comports.Contains(s))
+                    return s;
+            }
+        }
+
+        return "COM9";
+    }
+
+
+
 }
 
 
