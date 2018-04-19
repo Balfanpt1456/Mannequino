@@ -5,8 +5,8 @@
 
 // CONSTANTS ------------------------------------------------------------------
 
-#define MPU_COUNT 1
-const int ADO_PINS[MPU_COUNT] = {9};
+#define MPU_COUNT 5
+const int ADO_PINS[MPU_COUNT] = {8,9,10,11,12};
 
 #define READ_ADDRESS 0x68 // could have been 0x69
 #define MILLIS_TILL_RESET 1000
@@ -118,7 +118,7 @@ class Accelerometer : public MPU6050 {
       if (elapsedTime > MILLIS_TILL_SHIP) {
         dmpGetQuaternion(&q, fifo_buffer);
 
-        //if(id == 4){
+     // if(id == 4){
           Serial.print("[");
         Serial.print(id);
         Serial.print("\t");
@@ -130,7 +130,7 @@ class Accelerometer : public MPU6050 {
         Serial.print("\t");
         Serial.print(q.z, 5);
         Serial.println("]");
-        //}
+       // }
 
         last_serial_at = presentTime;
       }
@@ -151,7 +151,13 @@ class Accelerometer : public MPU6050 {
 bool is_dmp_ready = false; 
 
 Accelerometer mpus[] = {
-  Accelerometer(0)
+  Accelerometer(0),
+  Accelerometer(1),
+  Accelerometer(2),
+  Accelerometer(3),
+  Accelerometer(4)
+  
+  
 };
 
 // ----------------------------------------------------------------------------
@@ -171,12 +177,14 @@ void setup() {
   is_dmp_ready = true;
   for (int i = 0; i < MPU_COUNT; ++i) {
     is_dmp_ready = is_dmp_ready && mpus[i].initialize();
-    
-    if(i == 0){
-      mpus[i].setGyroOffsets(-29,14,46);
-    }
-
   }
+  
+  mpus[0].setGyroOffsets(163,-7,0); //red 
+  mpus[1].setGyroOffsets(-31,13,51); // green
+  mpus[2].setGyroOffsets(62,19,64); // orange
+  mpus[3].setGyroOffsets(12,131,26); // yellow
+  mpus[4].setGyroOffsets(56,-21,26); // blue
+  
 }
 
 // ----------------------------------------------------------------------------

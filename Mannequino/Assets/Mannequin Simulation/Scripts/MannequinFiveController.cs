@@ -15,10 +15,17 @@ public class MannequinFiveController : MonoBehaviour
     public Quaternion q;
     public Quaternion[] mv;
 
+
+    //public Quaternion off = Quaternion.Euler(0, 0, 90);
+   // public Quaternion offd; 
+
+
+
     public bool[] isCalibrated;
 
     void Start()
     {
+       // offd = Quaternion.Inverse(off);
         serial = new SerialPort(AutodetectArduinoPort(), 115200);
         serial.ReadTimeout = 100;
         serial.Open();
@@ -27,7 +34,7 @@ public class MannequinFiveController : MonoBehaviour
         for (int i = 0; i < mv.Length; i++)
         {
             //mv[i] = new Quaternion(0, 0, 0, 0);
-            mv[i] = limbs[i].localRotation;
+            mv[i] = limbs[i].rotation;
         }
 
         isCalibrated = new bool[limbs.Length];
@@ -71,10 +78,10 @@ public class MannequinFiveController : MonoBehaviour
 
 
                         q = ReadFrame(thingys);
-                        
+                       
 
                         //q = Quaternion.Lerp(q, q, .35f);
-                        limbs[i].localRotation = mv[i] * q;
+                        limbs[i].rotation = mv[i] * q;
 
                        
 
@@ -123,6 +130,14 @@ public class MannequinFiveController : MonoBehaviour
                         int j;
                         int.TryParse(thingys[0], out j);
                         Quaternion q = ReadFrame(thingys);
+                        if(j == 2 || j == 3)
+                        {
+                            q *= Quaternion.Euler(0, 180, 0);
+                        }
+                        if (j == 4)
+                        {
+                            q *= Quaternion.Euler(90, 0, 0);
+                        }
                         mv[j] = Quaternion.Inverse(q);
                         isCalibrated[i] = true;
                     }
@@ -135,12 +150,31 @@ public class MannequinFiveController : MonoBehaviour
     Quaternion ReadFrame(String[] thingys)
     {
         Quaternion q = new Quaternion();
+
+        int id = 0;    
+        int.TryParse(thingys[0], out id);
         float.TryParse(thingys[1], out q.w);
         float.TryParse(thingys[2], out q.y);
         float.TryParse(thingys[3], out q.z);
         float.TryParse(thingys[4], out q.x);
         q.x *= -1;
         q.y *= -1;
+
+
+        //q *= Quaternion.Euler(0, 90, 0);
+
+        if(id == 2 || id == 3)
+        {
+           q *= Quaternion.Euler(0, -90, 0);
+        } else if(id == 4)
+        {
+            q *= Quaternion.Euler(-90, 90, 0);
+        }
+        else
+        {
+            q *= Quaternion.Euler(0, 90, 0);
+        }
+
         return q;
     }
 
